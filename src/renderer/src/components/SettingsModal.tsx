@@ -10,7 +10,7 @@ import Modal from './Modal'
 import AiSettingsPanel from './AiSettingsPanel'
 import AboutPanel from './AboutPanel'
 
-export type Section = 'appearance' | 'keyboard' | 'ai' | 'plugins' | 'about'
+export type Section = 'appearance' | 'keyboard' | 'ai' | 'servers' | 'plugins' | 'about'
 
 function Row({ label, hint, children }: { label: string; hint?: string; children: ReactNode }) {
   return (
@@ -125,6 +125,34 @@ function Keyboard() {
   )
 }
 
+function ServerSettings() {
+  const { settings, updateSettings } = useApp()
+  if (!settings) return null
+  const s = settings.servers
+  return (
+    <div className="space-y-4 text-xs">
+      <div className="text-muted">
+        Local servers are created on the start screen under <span className="text-fg">Local servers</span>. They run as separate processes on this
+        computer and listen on 127.0.0.1 only.
+      </div>
+      <label className="flex items-start gap-2">
+        <input type="checkbox" className="mt-0.5" checked={s.keepRunning} onChange={(e) => void updateSettings({ servers: { keepRunning: e.target.checked } })} />
+        <span>
+          Keep servers running when DevPlus quits
+          <span className="block text-[11px] text-faint">Off: DevPlus stops every running server as it quits.</span>
+        </span>
+      </label>
+      <label className="flex items-start gap-2">
+        <input type="checkbox" className="mt-0.5" checked={s.startOnLogin} onChange={(e) => void updateSettings({ servers: { startOnLogin: e.target.checked } })} />
+        <span>
+          Start DevPlus in the tray when I sign in
+          <span className="block text-[11px] text-faint">Starts the servers marked "Start when DevPlus starts". Installed builds only.</span>
+        </span>
+      </label>
+    </div>
+  )
+}
+
 function Plugins() {
   const { settings, updateSettings, setError } = useApp()
   const plugins = usePlugins((s) => s.plugins)
@@ -204,6 +232,7 @@ export default function SettingsModal({ onClose, initial = 'appearance' }: { onC
     ['appearance', 'Appearance'],
     ['keyboard', 'Keyboard'],
     ['ai', 'AI assistant'],
+    ['servers', 'Local servers'],
     ['plugins', 'Plugins'],
     ['about', 'About']
   ]
@@ -221,6 +250,7 @@ export default function SettingsModal({ onClose, initial = 'appearance' }: { onC
           {section === 'appearance' && <Appearance />}
           {section === 'keyboard' && <Keyboard />}
           {section === 'ai' && <AiSettingsPanel />}
+          {section === 'servers' && <ServerSettings />}
           {section === 'plugins' && <Plugins />}
           {section === 'about' && <AboutPanel />}
         </div>

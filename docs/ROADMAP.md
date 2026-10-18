@@ -13,6 +13,7 @@
 
 ## Next
 
+- Local servers, part 2: Redis, MongoDB and Elasticsearch, a terminal with each server's command-line tools on PATH, import from DBngin, macOS and Linux
 - macOS Intel and Windows/Linux ARM builds
 - Code signing for Windows (SignPath for open-source projects) and Apple notarization
 - SQLite table rebuilds for column type, null, default and foreign key changes

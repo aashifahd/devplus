@@ -8,3 +8,6 @@ build/THIRD_PARTY_NOTICES.md
 
 # local planning notes, not published
 PLAN.md
+
+# downloaded server archives (scripts/server-catalog.mjs)
+.server-cache/

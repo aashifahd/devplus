@@ -13,6 +13,7 @@ A fast, native-feeling desktop client for SQL and NoSQL databases. Free and open
 - **Import and export** CSV, TSV, JSON and SQL; backup and restore through pg_dump and mysqldump; copy rows as INSERT, CSV or JSON
 - **AI assistant**, bring your own key (Anthropic, OpenAI, or a local model through Ollama or LM Studio): text to SQL, explain, fix errors. Only table and column names are sent unless you opt in to sample rows, and nothing runs without you
 - **Metrics boards** built from saved queries, a **map view** for location columns, and an **ER diagram** per schema
+- **Local servers**: run PostgreSQL, MySQL and MariaDB on your own machine without Docker. Pick a version, DevPlus downloads it from the official source (checksum-verified), starts it on a free port and connects to it in one click (Windows for now)
 - **SSH tunnels**, SSL, and passwords kept in your OS keychain
 - **Plugins** in plain JavaScript (sandboxed), light and dark themes, an accent color, and fully rebindable shortcuts
 

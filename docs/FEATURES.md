@@ -80,3 +80,16 @@ Known limits: filters are off for Cassandra and DynamoDB (use the query editor),
 - **Settings** (Ctrl+,): light/dark/system theme, accent color, editor and grid font size, row density; every shortcut is rebindable with clash warnings; command palette (Ctrl+Shift+P)
 
 Known limits: map tiles come from the public OpenStreetMap servers (fine for occasional use; heavy use should point at your own tile server); SQL Server geography binary isn't decoded (use `.STAsText()`); the ER diagram reads at most 300 tables per schema.
+
+## Local servers
+
+- **Local servers** tab on the start screen: run PostgreSQL (18.6, 17.11, 16.15), MySQL (8.4 LTS, 9.7 LTS, 26.7 Innovation) and MariaDB (12.3, 11.8, 11.4, 10.11 LTS) natively, without Docker or a VM
+- New server: pick the engine and version; DevPlus downloads it once from the official host (EDB, cdn.mysql.com, archive.mariadb.org) and checks it against a pinned or published SHA-256 before unpacking. The default port is used when free, otherwise the next free one
+- Every server listens on 127.0.0.1 only. Local development defaults: Postgres `trust` authentication for `postgres`, MySQL/MariaDB `root` with no password
+- Start, stop, logs (live tail), settings (name, port, start with DevPlus, MySQL/MariaDB binary log), open the config file or data folder, delete (optionally with its data)
+- **Connect** starts the server if needed and opens it in DevPlus; each server gets its own connection under "Local servers"
+- Servers are separate processes: they keep running when DevPlus closes and are picked up again on the next launch (turn this off in Settings → Local servers to stop them on quit). Optional start at sign-in, in the tray, with a tray menu to start and stop each server
+- On Windows, servers are launched through Win32_Process.Create so they inherit none of DevPlus's handles
+- `scripts/server-catalog.mjs` regenerates the list of versions and checksums (`src/shared/serverCatalog.ts`)
+
+Known limits: Windows only so far (macOS and Linux are planned); Redis, MongoDB and Elasticsearch servers are next; stop your servers before uninstalling DevPlus, since the uninstaller doesn't stop them.

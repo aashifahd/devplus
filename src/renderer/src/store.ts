@@ -99,7 +99,7 @@ interface AppState {
   /** Full-window overlays opened from shortcuts or the palette. */
   overlay: 'palette' | 'settings' | null
   /** Which settings section opens next (e.g. About from "Check for updates"). */
-  settingsSection: 'appearance' | 'keyboard' | 'ai' | 'plugins' | 'about'
+  settingsSection: 'appearance' | 'keyboard' | 'ai' | 'servers' | 'plugins' | 'about'
   /** Text the AI panel should start with (set by "Ask AI" from elsewhere). */
   aiPrompt: { tabId: string; text: string } | null
 

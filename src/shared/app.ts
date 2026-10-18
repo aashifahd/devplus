@@ -27,4 +27,4 @@ export interface UpdateState {
   checkedAt?: number
 }
 
-export type AppEvent = { type: 'update'; state: UpdateState }
+export type AppEvent = { type: 'update'; state: UpdateState } | { type: 'servers'; states: import('./servers').ServerState[] }

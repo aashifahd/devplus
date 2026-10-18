@@ -9,6 +9,16 @@
 
 Local builds: `npm run dist` makes an installer for the current OS in `dist/` without publishing anything.
 
+## Updating the local server catalog
+
+The server versions DevPlus can install, with their download URLs and SHA-256 checksums, live in `src/shared/serverCatalog.ts`. To pick up new releases, edit the version lists at the top of `scripts/server-catalog.mjs` and run:
+
+```bash
+node scripts/server-catalog.mjs
+```
+
+It reads MariaDB's published checksums and downloads the PostgreSQL and MySQL archives once (about 2 GB, cached in `.server-cache/`) to hash them. Commit the regenerated file in a pull request.
+
 ## How updates work
 
 `electron-updater` reads the update metadata from the latest published GitHub release, downloads the new installer in the background (differentially where a blockmap exists), and installs it on the next restart or when the user clicks **Restart to update**. Users can turn automatic checks off in Settings → About. Builds run from source never update themselves.
