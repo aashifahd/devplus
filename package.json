@@ -77,5 +77,8 @@
   },
   "bugs": {
     "url": "https://github.com/aashifahd/devplus/issues"
+  },
+  "overrides": {
+    "dompurify": "^3.4.17"
   }
 }
