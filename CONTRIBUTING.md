@@ -33,7 +33,8 @@ docker run -d --name dbc-pg -e POSTGRES_PASSWORD=secret -p 55432:5432 postgres:1
 
 ## Pull requests
 
-- Work on a branch and open the pull request against `main`. Merges are squash or rebase only, so history stays linear.
+- Follow [docs/BRANCHING.md](docs/BRANCHING.md): branch from `main` with a prefixed name (`feature/…`, `fix/…`, `docs/…`), and open the pull request against `main`. Merges are squash or rebase only, so history stays linear.
+- Use a [Conventional Commits](https://www.conventionalcommits.org) title such as `fix(grid): keep CRLF when pasting`. It becomes the commit on `main` and the line in the release notes, and a check enforces it.
 - One topic per pull request, with a description of what changed and how you tested it (screenshots for UI changes help).
 - Mention which database engines you tried it against.
 

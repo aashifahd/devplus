@@ -1,0 +1,20 @@
+# Categories for GitHub's auto-generated release notes, matched by pull request label.
+# Labels are added from the PR title by .github/workflows/pr.yml.
+changelog:
+  exclude:
+    labels: [skip-changelog]
+  categories:
+    - title: Breaking changes
+      labels: [breaking]
+    - title: New features
+      labels: [feature]
+    - title: Bug fixes
+      labels: [fix]
+    - title: Performance
+      labels: [performance]
+    - title: Documentation
+      labels: [docs]
+    - title: Dependencies
+      labels: [dependencies]
+    - title: Maintenance
+      labels: ['*']

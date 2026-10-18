@@ -1,0 +1,46 @@
+name: PR
+
+# Pull request titles become the squashed commit on main and the line in the release notes,
+# so they follow Conventional Commits. The type also picks the label for the release notes.
+on:
+  pull_request:
+    types: [opened, edited, reopened, synchronize]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  title:
+    name: PR title
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check the title and label the pull request
+        env:
+          # Passed through the environment, never interpolated into the script.
+          TITLE: ${{ github.event.pull_request.title }}
+          NUMBER: ${{ github.event.pull_request.number }}
+          AUTHOR: ${{ github.event.pull_request.user.login }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          re='^(feat|fix|perf|refactor|docs|test|ci|build|chore|deps|revert)(\([a-z0-9][a-z0-9-]*\))?(!)?: [^ ].+$'
+          if ! [[ "$TITLE" =~ $re ]]; then
+            echo "::error::Title must look like 'fix(grid): keep CRLF when pasting' (see docs/BRANCHING.md). Got: $TITLE"
+            exit 1
+          fi
+          type="${BASH_REMATCH[1]}"
+          case "$type" in
+            feat) label=feature ;;
+            fix|revert) label=fix ;;
+            perf) label=performance ;;
+            docs) label=docs ;;
+            deps) label=dependencies ;;
+            *) label=maintenance ;;
+          esac
+          echo "Type: $type -> label: $label"
+          # Dependabot runs get a read-only token and label their own pull requests.
+          if [ "$AUTHOR" != "dependabot[bot]" ]; then
+            gh pr edit "$NUMBER" --add-label "$label"
+            if [ -n "${BASH_REMATCH[3]}" ]; then gh pr edit "$NUMBER" --add-label breaking; fi
+          fi
