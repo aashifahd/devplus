@@ -2,6 +2,8 @@
 
 A fast, native-feeling desktop client for SQL and NoSQL databases. Free and open source (GPL-3.0).
 
+![DevPlus showing a PostgreSQL table in the dark theme](docs/screenshots/table.png)
+
 ## What it does
 
 - **12 engines in one app**: PostgreSQL, MySQL/MariaDB, SQLite, SQL Server, DuckDB, ClickHouse, Snowflake, BigQuery, MongoDB, Redis, Cassandra/ScyllaDB, DynamoDB
@@ -15,6 +17,19 @@ A fast, native-feeling desktop client for SQL and NoSQL databases. Free and open
 - **Plugins** in plain JavaScript (sandboxed), light and dark themes, an accent color, and fully rebindable shortcuts
 
 See [docs/FEATURES.md](docs/FEATURES.md) for the details and known limits of each part.
+
+## Screenshots
+
+| | |
+|---|---|
+| ![Connection list with groups and environment tags](docs/screenshots/connections.png) | ![Staged edits reviewed as SQL before commit](docs/screenshots/safe-edits.png) |
+| **Connections** grouped, color-coded and tagged by environment | **Safe editing**: every change is reviewed as SQL before it commits |
+| ![Query editor with results and the AI assistant](docs/screenshots/query-ai.png) | ![ER diagram of a schema](docs/screenshots/er-diagram.png) |
+| **Query editor** with the AI assistant writing SQL from your schema | **ER diagram** for any schema, exportable as SVG |
+| ![Metrics board with number, line and bar widgets](docs/screenshots/metrics.png) | ![Map view of rows with coordinates](docs/screenshots/map.png) |
+| **Metrics boards** built from queries, refreshed on a timer | **Map view** for latitude/longitude, GeoJSON, WKT and PostGIS columns |
+| ![The same table in the light theme](docs/screenshots/table-light.png) | |
+| **Light theme**, plus your own accent color, fonts and row density | |
 
 ## Download
 
