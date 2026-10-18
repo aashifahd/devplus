@@ -29,10 +29,24 @@ export default function MapView({ columns, rows, sources }: { columns: ColumnMet
   const hostRef = useRef<HTMLDivElement>(null)
   const mapRef = useRef<L.Map | null>(null)
   const layerRef = useRef<L.GeoJSON | null>(null)
+  /** Set when new data arrives; cleared once the view has been fitted at a real size. */
+  const fitPending = useRef(false)
   const [sourceId, setSourceId] = useState(sources[0]?.id ?? '')
   const [dark, setDark] = useState(isDark)
   const source = sources.find((s) => s.id === sourceId) ?? sources[0]
   const { features, skipped } = useMemo(() => (source ? featuresFor(source, rows, FEATURE_LIMIT) : { features: [], skipped: 0 }), [source, rows])
+
+  const fitToData = () => {
+    const map = mapRef.current
+    const layer = layerRef.current
+    const box = hostRef.current
+    if (!map || !layer || !box || box.clientWidth === 0 || box.clientHeight === 0) return
+    // Leaflet caches its size at creation, before the panel is laid out; refresh it before fitting.
+    map.invalidateSize()
+    const b = layer.getBounds()
+    if (b.isValid()) map.fitBounds(b, { padding: [30, 30], maxZoom: 15 })
+    fitPending.current = false
+  }
 
   useEffect(() => {
     const map = L.map(hostRef.current!, { worldCopyJump: true, preferCanvas: true, attributionControl: true })
@@ -40,7 +54,11 @@ export default function MapView({ columns, rows, sources }: { columns: ColumnMet
     map.setView([20, 0], 2)
     mapRef.current = map
     // The container is sized by flexbox after mount; tell Leaflet once it settles.
-    const ro = new ResizeObserver(() => map.invalidateSize())
+    // The panel gets its size after mount; fit to the data once it has one.
+    const ro = new ResizeObserver(() => {
+      map.invalidateSize()
+      if (fitPending.current) fitToData()
+    })
     ro.observe(hostRef.current!)
     const onTheme = () => setDark(isDark())
     window.addEventListener(THEME_EVENT, onTheme)
@@ -63,14 +81,18 @@ export default function MapView({ columns, rows, sources }: { columns: ColumnMet
     const layer = L.geoJSON(
       { type: 'FeatureCollection', features: features.map((f) => ({ type: 'Feature', properties: { row: f.row }, geometry: f.geometry })) } as GeoJSON.FeatureCollection,
       {
-        style: () => ({ color: fill, weight: 2, fillColor: fill, fillOpacity: 0.12 }),
+        // L.geoJSON applies `style` to point markers too, so points need the dot style here, not just in pointToLayer.
+        style: (f) =>
+          f?.geometry.type === 'Point' || f?.geometry.type === 'MultiPoint'
+            ? { color: ring, weight: 2, fillColor: fill, fillOpacity: 1 }
+            : { color: fill, weight: 2, fillColor: fill, fillOpacity: 0.12 },
         pointToLayer: (_f, at) => L.circleMarker(at, { radius: 5, color: ring, weight: 2, fillColor: fill, fillOpacity: 1 }),
         onEachFeature: (f, l) => l.bindPopup(() => popupHtml(columns, rows[(f.properties as { row: number }).row], skip), { maxWidth: 360 })
       }
     ).addTo(map)
     layerRef.current = layer
-    const b = layer.getBounds()
-    if (b.isValid()) map.fitBounds(b, { padding: [30, 30], maxZoom: 15 })
+    fitPending.current = true
+    fitToData()
   }, [features, columns, rows, source, dark])
 
   return (
