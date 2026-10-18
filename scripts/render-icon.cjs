@@ -1,0 +1,17 @@
+// Render build/icon.svg to build/icon.png (1024x1024) with Electron: npx electron scripts/render-icon.cjs build/icon.svg build/icon.png
+const { app, BrowserWindow } = require('electron')
+const { readFileSync, writeFileSync } = require('node:fs')
+const [svgPath, outPath] = process.argv.slice(-2)
+app.disableHardwareAcceleration()
+app.whenReady().then(async () => {
+  const win = new BrowserWindow({ backgroundColor: '#00000000', width: 1024, height: 1024, show: false, frame: false, transparent: true, useContentSize: true, webPreferences: { offscreen: true } })
+  const svg = readFileSync(svgPath, 'utf8')
+  await win.loadURL('data:text/html,' + encodeURIComponent(`<html><head><style>html,body{margin:0;overflow:hidden;background:transparent}svg{display:block;width:100vw;height:100vh}</style></head><body>${svg}</body></html>`))
+  await new Promise((r) => setTimeout(r, 500))
+  const img = await win.webContents.capturePage()
+  const { width, height } = img.getSize()
+  const side = Math.min(width, height)
+  const square = img.crop({ x: Math.floor((width - side) / 2), y: Math.floor((height - side) / 2), width: side, height: side })
+  writeFileSync(outPath, square.resize({ width: 1024, height: 1024, quality: 'best' }).toPNG())
+  app.quit()
+})

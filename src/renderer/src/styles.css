@@ -1,0 +1,211 @@
+@import 'tailwindcss';
+
+:root {
+  --bg: #ffffff;
+  --series-1: #2a78d6;
+  --series-2: #eb6834;
+  --series-3: #1baf7a;
+  --series-4: #eda100;
+  --series-5: #e87ba4;
+  --series-6: #008300;
+  --series-7: #6250d6;
+  --series-8: #e34948;
+  --panel: #f6f6f7;
+  --panel-2: #eeeef0;
+  --border: #e3e3e6;
+  --text: #1d1d20;
+  --muted: #74747c;
+  --faint: #a5a5ad;
+  --accent: #2f6fed;
+  --accent-soft: #e6eefd;
+  --danger: #d93a3a;
+  --ok: #1f9d55;
+  color-scheme: light;
+}
+
+/* Dark palette: from the OS unless the user forced light, or forced dark in settings. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --bg: #17181b;
+    --panel: #1e1f23;
+    --panel-2: #26272c;
+    --border: #2e3036;
+    --text: #e6e6e9;
+    --muted: #9a9aa3;
+    --faint: #63636b;
+    --accent: #5b8cff;
+    --accent-soft: #233150;
+    --danger: #f06363;
+    --ok: #3ccb7f;
+    --series-1: #3987e5;
+    --series-2: #d95926;
+    --series-3: #199e70;
+    --series-4: #c98500;
+    --series-5: #d55181;
+    --series-6: #008300;
+    --series-7: #9085e9;
+    --series-8: #e66767;
+    color-scheme: dark;
+  }
+}
+
+:root[data-theme='dark'] {
+  --bg: #17181b;
+  --panel: #1e1f23;
+  --panel-2: #26272c;
+  --border: #2e3036;
+  --text: #e6e6e9;
+  --muted: #9a9aa3;
+  --faint: #63636b;
+  --accent: #5b8cff;
+  --accent-soft: #233150;
+  --danger: #f06363;
+  --ok: #3ccb7f;
+  --series-1: #3987e5;
+  --series-2: #d95926;
+  --series-3: #199e70;
+  --series-4: #c98500;
+  --series-5: #d55181;
+  --series-6: #008300;
+  --series-7: #9085e9;
+  --series-8: #e66767;
+  color-scheme: dark;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-panel: var(--panel);
+  --color-panel-2: var(--panel-2);
+  --color-line: var(--border);
+  --color-fg: var(--text);
+  --color-muted: var(--muted);
+  --color-faint: var(--faint);
+  --color-accent: var(--accent);
+  --color-accent-soft: var(--accent-soft);
+  --color-danger: var(--danger);
+  --color-ok: var(--ok);
+  --font-sans: 'Segoe UI Variable', 'Segoe UI', system-ui, sans-serif;
+  --font-mono: 'Cascadia Mono', Consolas, ui-monospace, monospace;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: 13px;
+  user-select: none;
+  overflow: hidden;
+}
+
+input,
+select,
+textarea {
+  user-select: text;
+}
+
+/* Layered so Tailwind utilities (w-*, h-*, pl-*) can override these defaults. */
+@layer components {
+  .field {
+    height: 28px;
+    width: 100%;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: var(--bg);
+    color: var(--text);
+    padding: 0 8px;
+    outline: none;
+  }
+  .field:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-soft);
+  }
+
+  .btn {
+    height: 28px;
+    padding: 0 12px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: var(--panel);
+    color: var(--text);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+  }
+  .btn:hover:not(:disabled) {
+    background: var(--panel-2);
+  }
+  .btn:disabled {
+    opacity: 0.5;
+  }
+  .btn-primary {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+  }
+  .btn-primary:hover:not(:disabled) {
+    background: var(--accent);
+    filter: brightness(1.08);
+  }
+  .icon-btn {
+    height: 24px;
+    width: 24px;
+    border-radius: 5px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--muted);
+  }
+  .icon-btn:hover {
+    background: var(--panel-2);
+    color: var(--text);
+  }
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 5px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+/* Statement currently executing in the query editor. */
+.dbc-running {
+  background: var(--accent-soft);
+}
+
+/* Map view: OSM tiles dimmed for the dark theme; markers and shapes keep their own colors. */
+.dbc-map-dark .leaflet-tile-pane {
+  filter: invert(1) hue-rotate(180deg) brightness(0.9) contrast(0.85);
+}
+.leaflet-container {
+  background: var(--panel);
+  font-family: var(--font-sans);
+}
+.dbc-map-popup {
+  border-collapse: collapse;
+  font-size: 11px;
+}
+.dbc-map-popup th {
+  padding: 1px 8px 1px 0;
+  text-align: left;
+  font-weight: 600;
+  color: #555;
+  white-space: nowrap;
+  vertical-align: top;
+}
+.dbc-map-popup td {
+  padding: 1px 0;
+  word-break: break-word;
+}

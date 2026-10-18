@@ -1,0 +1,36 @@
+name: Bug report
+description: Something doesn't work as expected
+labels: [bug]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: What you did, what you expected, and what happened instead.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Connect to ...
+        2. Open ...
+        3. ...
+  - type: input
+    id: engine
+    attributes:
+      label: Database engine and version
+      placeholder: PostgreSQL 17, MySQL 8.4, ...
+  - type: textarea
+    id: env
+    attributes:
+      label: Environment
+      description: '"Report a problem" in Settings → About fills this in for you.'
+      placeholder: App version, operating system
+  - type: textarea
+    id: log
+    attributes:
+      label: Log excerpt
+      description: From Settings → About → Open logs folder. Remove anything private (hosts, data) first.
+      render: text

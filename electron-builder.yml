@@ -1,0 +1,73 @@
+appId: io.github.aashifahd.devplus
+productName: DevPlus
+copyright: Copyright © 2026 DevPlus contributors
+
+directories:
+  buildResources: build
+  output: dist
+
+files:
+  - out/**
+  - package.json
+  - '!**/*.{map,md,ts,tsx}'
+  - '!**/{test,tests,__tests__,docs,example,examples}/**'
+
+extraResources:
+  - from: build/THIRD_PARTY_NOTICES.md
+    to: THIRD_PARTY_NOTICES.md
+  - from: LICENSE
+    to: LICENSE
+
+# Drivers are pure JS or ship prebuilt N-API binaries (DuckDB), so nothing needs compiling.
+npmRebuild: false
+asar: true
+asarUnpack:
+  - '**/*.node'
+
+publish:
+  provider: github
+  owner: aashifahd
+  repo: devplus
+  releaseType: draft
+
+win:
+  target:
+    - target: nsis
+      arch: [x64]
+  # No spaces: update metadata references artifacts by URL.
+  artifactName: DevPlus-Setup-${version}.${ext}
+  # Signing: set WIN_CSC_LINK / WIN_CSC_KEY_PASSWORD, or sign through SignPath in CI (see docs/RELEASING.md).
+  signAndEditExecutable: true
+
+nsis:
+  oneClick: false
+  perMachine: false
+  allowToChangeInstallationDirectory: true
+  createDesktopShortcut: true
+  createStartMenuShortcut: true
+  shortcutName: DevPlus
+  license: LICENSE
+  deleteAppDataOnUninstall: false
+
+mac:
+  target:
+    - target: dmg
+      arch: [universal]
+    - target: zip
+      arch: [universal]
+  category: public.app-category.developer-tools
+  artifactName: DevPlus-${version}-${arch}.${ext}
+  hardenedRuntime: true
+  gatekeeperAssess: false
+  entitlements: build/entitlements.mac.plist
+  entitlementsInherit: build/entitlements.mac.plist
+  # Signing uses CSC_LINK; notarization runs when APPLE_ID, APPLE_APP_SPECIFIC_PASSWORD and APPLE_TEAM_ID are set.
+
+linux:
+  target:
+    - AppImage
+    - deb
+  category: Development
+  maintainer: DevPlus contributors <aashifahd@users.noreply.github.com>
+  synopsis: Desktop client for SQL and NoSQL databases
+  artifactName: DevPlus-${version}-${arch}.${ext}

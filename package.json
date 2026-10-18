@@ -1,0 +1,81 @@
+{
+  "name": "devplus",
+  "version": "0.8.0",
+  "description": "Desktop client for SQL and NoSQL databases",
+  "main": "out/main/index.js",
+  "scripts": {
+    "dev": "electron-vite dev",
+    "build": "electron-vite build",
+    "start": "electron-vite preview",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "notices": "node scripts/notices.mjs",
+    "dist": "npm run notices && electron-vite build && electron-builder --publish never",
+    "release": "npm run notices && electron-vite build && electron-builder --publish always"
+  },
+  "author": {
+    "name": "DevPlus contributors"
+  },
+  "license": "GPL-3.0-or-later",
+  "type": "commonjs",
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.135.0",
+    "@aws-sdk/client-dynamodb": "^3.1152.0",
+    "@aws-sdk/util-dynamodb": "^3.996.9",
+    "@clickhouse/client": "^1.24.1",
+    "@duckdb/node-api": "^1.5.6-r.1",
+    "@google-cloud/bigquery": "^9.3.0",
+    "bson": "^7.3.3",
+    "cassandra-driver": "^4.10.0",
+    "electron-updater": "^6.8.9",
+    "ioredis": "^6.0.0",
+    "json5": "^2.2.3",
+    "mongodb": "^7.7.0",
+    "mssql": "^12.7.9",
+    "mysql2": "^3.24.6",
+    "pg": "^8.23.1",
+    "snowflake-sdk": "^3.4.0",
+    "ssh2": "^1.17.0"
+  },
+  "devDependencies": {
+    "@glideapps/glide-data-grid": "^6.0.3",
+    "@tailwindcss/vite": "^4.3.3",
+    "@types/leaflet": "^1.9.22",
+    "@types/mssql": "^12.3.0",
+    "@types/node": "^26.6.5",
+    "@types/pg": "^8.23.1",
+    "@types/react": "^18.3.31",
+    "@types/react-dom": "^18.3.7",
+    "@types/ssh2": "^1.15.6",
+    "@vitejs/plugin-react": "^5.2.0",
+    "electron": "^44.9.0",
+    "electron-builder": "^26.15.3",
+    "electron-vite": "^6.0.0",
+    "leaflet": "^1.9.4",
+    "lucide-react": "^1.59.0",
+    "monaco-editor": "^0.57.0",
+    "nanoid": "^6.0.2",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "sql-formatter": "^15.9.0",
+    "tailwindcss": "^4.3.3",
+    "typescript": "^7.0.2",
+    "vite": "^7.3.7",
+    "zustand": "^5.0.15"
+  },
+  "allowScripts": {
+    "electron-winstaller@5.4.0": true,
+    "esbuild@0.28.2": true,
+    "cpu-features": false,
+    "ssh2": false
+  },
+  "productName": "DevPlus",
+  "private": true,
+  "homepage": "https://github.com/aashifahd/devplus",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/aashifahd/devplus.git"
+  },
+  "bugs": {
+    "url": "https://github.com/aashifahd/devplus/issues"
+  }
+}

@@ -1,0 +1,10 @@
+node_modules/
+out/
+dist/
+*.log
+
+# generated at build time (npm run notices)
+build/THIRD_PARTY_NOTICES.md
+
+# local planning notes, not published
+PLAN.md
