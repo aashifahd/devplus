@@ -6,6 +6,8 @@ import * as updater from './updater'
 import * as appInfo from './appInfo'
 import { log } from './logs'
 import { findTablePlusFile, readTablePlus } from './importers/tableplus'
+import * as servers from './servers'
+import { applyLoginItem } from './tray'
 import { isReadStatement, splitStatements } from '@shared/sqlsplit'
 import { TASK_EVENT, type Api, type Channel } from '@shared/api'
 import type { ConnectionDraft, ConnectionSecrets, IpcResult, TaskEvent } from '@shared/types'
@@ -114,6 +116,7 @@ const handlers: Handlers = {
   'settings:update': (patch) => {
     const next = store.updateSettings(patch)
     if (patch.updates?.auto !== undefined) updater.setAuto(next.updates.auto)
+    if (patch.servers?.startOnLogin !== undefined) applyLoginItem(next.servers.startOnLogin)
     return next
   },
   'ai:setKey': (provider, key) => store.setAiKey(provider, key),
@@ -141,6 +144,18 @@ const handlers: Handlers = {
     writeFileSync(path, text, 'utf8')
     return text.length
   },
+  'servers:catalog': () => servers.catalog(),
+  'servers:list': () => servers.list(),
+  'servers:suggestPort': (engine) => servers.suggestPort(engine),
+  'servers:create': (draft, taskId) => servers.create(draft, progressOf(taskId)),
+  'servers:start': (id) => servers.start(id),
+  'servers:stop': (id) => servers.stop(id),
+  'servers:restart': (id) => servers.restart(id),
+  'servers:update': (id, patch) => servers.update(id, patch),
+  'servers:delete': (id, deleteData) => servers.remove(id, deleteData),
+  'servers:logs': (id) => servers.tail(id),
+  'servers:open': (id, which) => servers.openFolder(id, which),
+  'servers:connection': (id) => servers.connectionFor(store.listServers().find((s) => s.id === id) ?? (() => { throw new Error('That server no longer exists.') })()),
   'import:tableplusFind': () => findTablePlusFile(),
   'import:tableplusRead': (path) => readTablePlus(path, store.listConnections()),
   // Imported connections never carry secrets; passwords are asked for on first connect.

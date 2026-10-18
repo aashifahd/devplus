@@ -4,6 +4,7 @@ import { join } from 'node:path'
 import { app, safeStorage } from 'electron'
 import type { ConnectionConfig, ConnectionDraft, ConnectionSecrets, HistoryEntry, SavedQuery } from '@shared/types'
 import type { MetricsBoard } from '@shared/metrics'
+import type { LocalServer } from '@shared/servers'
 import { mergeSettings, withDefaults, type AiProvider, type AppSettings, type DeepPartial } from '@shared/settings'
 
 const dir = () => {
@@ -202,5 +203,29 @@ export function deleteBoard(id: string) {
   writeJson(
     metricsFile(),
     readJson<MetricsBoard[]>(metricsFile(), []).filter((b) => b.id !== id)
+  )
+}
+
+// ---- local servers ----------------------------------------------------------------------------
+
+const serversFile = () => join(dir(), 'servers.json')
+
+export function listServers(): LocalServer[] {
+  return readJson<LocalServer[]>(serversFile(), [])
+}
+
+export function saveServer(server: LocalServer): LocalServer {
+  const all = listServers()
+  const i = all.findIndex((s) => s.id === server.id)
+  if (i >= 0) all[i] = server
+  else all.push(server)
+  writeJson(serversFile(), all)
+  return server
+}
+
+export function deleteServerRecord(id: string) {
+  writeJson(
+    serversFile(),
+    listServers().filter((s) => s.id !== id)
   )
 }

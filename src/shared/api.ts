@@ -33,6 +33,7 @@ import type { FormatOptions } from './formats'
 import type { AiProvider, AppSettings, DeepPartial } from './settings'
 import type { MetricsBoard } from './metrics'
 import type { AppInfo, UpdateState } from './app'
+import type { ServerDraft, ServerEngine, ServerRelease, ServerState, ServerView, LocalServer } from './servers'
 import type { AiRequest, AiResult, AiTestRequest } from './ai'
 
 /** Event channel for TaskEvent updates (progress and tool output). */
@@ -94,6 +95,18 @@ export interface Api {
   'plugins:openFolder': () => void
   'plugins:createExample': () => string
   'files:writeText': (path: string, text: string) => number
+  'servers:catalog': () => { releases: ServerRelease[]; installed: Record<ServerEngine, string[]> }
+  'servers:list': () => ServerView[]
+  'servers:suggestPort': (engine: ServerEngine) => number
+  'servers:create': (draft: ServerDraft, taskId: string) => ServerView
+  'servers:start': (id: string) => ServerState
+  'servers:stop': (id: string) => ServerState
+  'servers:restart': (id: string) => ServerState
+  'servers:update': (id: string, patch: Partial<Pick<LocalServer, 'name' | 'port' | 'autoStart' | 'binlog'>>) => ServerView
+  'servers:delete': (id: string, deleteData: boolean) => void
+  'servers:logs': (id: string) => string
+  'servers:open': (id: string, which: 'data' | 'config' | 'log') => void
+  'servers:connection': (id: string) => ConnectionConfig
   'import:tableplusFind': () => string | null
   'import:tableplusRead': (path: string) => ImportCandidate[]
   'import:save': (configs: ConnectionConfig[]) => number
@@ -169,6 +182,18 @@ export const CHANNELS: Channel[] = [
   'plugins:openFolder',
   'plugins:createExample',
   'files:writeText',
+  'servers:catalog',
+  'servers:list',
+  'servers:suggestPort',
+  'servers:create',
+  'servers:start',
+  'servers:stop',
+  'servers:restart',
+  'servers:update',
+  'servers:delete',
+  'servers:logs',
+  'servers:open',
+  'servers:connection',
   'import:tableplusFind',
   'import:tableplusRead',
   'import:save',

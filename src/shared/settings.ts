@@ -1,4 +1,5 @@
 import type { ToolName } from './types'
+import { DEFAULT_SERVER_SETTINGS, type ServerSettings } from './servers'
 
 export type ThemeMode = 'system' | 'light' | 'dark'
 
@@ -73,6 +74,7 @@ export interface AppSettings {
   plugins: { disabled: string[] }
   /** Installed builds: check GitHub Releases in the background and download new versions. */
   updates: { auto: boolean }
+  servers: ServerSettings
 }
 
 export const DEFAULT_UI: UiSettings = { theme: 'system', accent: '#2f6fed', editorFontSize: 13, gridFontSize: 12, density: 'regular' }
@@ -85,7 +87,7 @@ export const DEFAULT_MODELS: Record<AiProvider, string> = {
 
 export const DEFAULT_AI: AiSettings = { provider: 'anthropic', model: DEFAULT_MODELS.anthropic, baseUrl: 'http://localhost:11434/v1', includeSampleRows: false }
 
-export const DEFAULT_SETTINGS: AppSettings = { toolPaths: {}, ui: DEFAULT_UI, keymap: {}, ai: DEFAULT_AI, plugins: { disabled: [] }, updates: { auto: true } }
+export const DEFAULT_SETTINGS: AppSettings = { toolPaths: {}, ui: DEFAULT_UI, keymap: {}, ai: DEFAULT_AI, plugins: { disabled: [] }, updates: { auto: true }, servers: DEFAULT_SERVER_SETTINGS }
 
 /** Fill in anything missing from a saved (possibly older) settings file. */
 export function withDefaults(s: Partial<AppSettings> | undefined): AppSettings {
@@ -95,7 +97,8 @@ export function withDefaults(s: Partial<AppSettings> | undefined): AppSettings {
     keymap: { ...(s?.keymap ?? {}) },
     ai: { ...DEFAULT_AI, ...(s?.ai ?? {}) },
     plugins: { disabled: [...(s?.plugins?.disabled ?? [])] },
-    updates: { auto: s?.updates?.auto ?? true }
+    updates: { auto: s?.updates?.auto ?? true },
+    servers: { ...DEFAULT_SERVER_SETTINGS, ...(s?.servers ?? {}) }
   }
 }
 
@@ -110,7 +113,8 @@ export function mergeSettings(base: AppSettings, patch: DeepPartial<AppSettings>
     keymap: (patch.keymap ? { ...base.keymap, ...patch.keymap } : base.keymap) as AppSettings['keymap'],
     ai: { ...base.ai, ...(patch.ai ?? {}) } as AiSettings,
     plugins: { disabled: (patch.plugins?.disabled as string[] | undefined) ?? base.plugins.disabled },
-    updates: { auto: patch.updates?.auto ?? base.updates.auto }
+    updates: { auto: patch.updates?.auto ?? base.updates.auto },
+    servers: { ...base.servers, ...(patch.servers ?? {}) } as ServerSettings
   })
 }
 

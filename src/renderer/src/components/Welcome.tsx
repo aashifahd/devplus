@@ -8,6 +8,7 @@ import { ENGINES } from '@shared/engines'
 import ConnectionEditor from './ConnectionEditor'
 import PasswordPrompt from './PasswordPrompt'
 import ImportModal from './ImportModal'
+import ServersPanel from './ServersPanel'
 import appIcon from '../../../../build/icon.png'
 
 function subtitle(c: ConnectionConfig) {
@@ -30,6 +31,7 @@ export default function Welcome() {
   const [busyId, setBusyId] = useState<string | null>(null)
   const [selectedId, setSelectedId] = useState<string | null>(null)
   const [importing, setImporting] = useState(false)
+  const [view, setView] = useState<'connections' | 'servers'>('connections')
 
   const groups = useMemo(() => {
     const q = query.trim().toLowerCase()
@@ -85,90 +87,109 @@ export default function Welcome() {
       </aside>
 
       <main className="flex min-w-0 flex-1 flex-col">
-        <div className="flex items-center gap-2 border-b border-line px-4 py-3">
-          <div className="relative flex-1">
-            <Search size={14} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-faint" />
-            <input
-              className="field pl-8"
-              placeholder="Search connections"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-            />
-          </div>
-          <button className="icon-btn" title="New connection" onClick={() => setEditing('new')}>
-            <Plus size={16} />
-          </button>
-        </div>
-
-        <div className="min-h-0 flex-1 overflow-y-auto px-2 py-2">
-          {connections.length === 0 && (
-            <div className="mt-24 text-center text-muted">
-              No connections yet.
-              <div className="mt-3">
-                <button className="btn" onClick={() => setEditing('new')}>
-                  <Plus size={14} /> Create your first connection
-                </button>
-              </div>
-            </div>
-          )}
-
-          {groups.map(([group, items]) => (
-            <section key={group || '_'} className="mb-2">
-              {group && <div className="px-3 pb-1 pt-3 text-[11px] font-semibold uppercase tracking-wide text-faint">{group}</div>}
-              {items.map((c) => (
-                <div
-                  key={c.id}
-                  className={`group flex cursor-default items-center gap-3 rounded-lg px-3 py-2 ${
-                    selectedId === c.id ? 'bg-accent-soft' : 'hover:bg-panel'
-                  }`}
-                  onClick={() => setSelectedId(c.id)}
-                  onDoubleClick={() => open(c)}
-                  onKeyDown={(e) => e.key === 'Enter' && open(c)}
-                  tabIndex={0}
-                >
-                  <div
-                    className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-[11px] font-bold text-white"
-                    style={{ background: c.color }}
-                  >
-                    {ENGINES[c.engine].badge}
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <div className="flex items-center gap-2">
-                      <span className="truncate font-medium">{c.name}</span>
-                      <span
-                        className="rounded px-1.5 py-px text-[10px] font-semibold uppercase text-white"
-                        style={{ background: TAG_COLORS[c.tag] }}
-                      >
-                        {c.tag}
-                      </span>
-                    </div>
-                    <div className="truncate text-xs text-muted">
-                      {ENGINE_LABELS[c.engine]} · {subtitle(c)}
-                    </div>
-                  </div>
-                  {busyId === c.id ? (
-                    <span className="text-xs text-muted">Connecting…</span>
-                  ) : (
-                    <div className="hidden items-center gap-0.5 group-hover:flex">
-                      <button className="icon-btn" title="Edit" onClick={() => setEditing(c)}>
-                        <Pencil size={13} />
-                      </button>
-                      <button className="icon-btn" title="Duplicate" onClick={() => duplicate(c)}>
-                        <Copy size={13} />
-                      </button>
-                      <button className="icon-btn" title="Delete" onClick={() => remove(c)}>
-                        <Trash2 size={13} />
-                      </button>
-                      <button className="btn ml-1 h-6 px-2 text-xs" onClick={() => open(c)}>
-                        Connect
-                      </button>
-                    </div>
-                  )}
-                </div>
-              ))}
-            </section>
+        <div className="flex h-10 shrink-0 items-end gap-1 border-b border-line px-3" role="tablist">
+          {(['connections', 'servers'] as const).map((v) => (
+            <button
+              key={v}
+              role="tab"
+              aria-selected={view === v}
+              className={`-mb-px border-b-2 px-3 pb-2 text-xs font-medium ${view === v ? 'border-accent text-fg' : 'border-transparent text-muted hover:text-fg'}`}
+              onClick={() => setView(v)}
+            >
+              {v === 'connections' ? `Connections${connections.length ? ` (${connections.length})` : ''}` : 'Local servers'}
+            </button>
           ))}
         </div>
+        {view === 'servers' ? (
+          <ServersPanel />
+        ) : (
+          <>
+          <div className="flex items-center gap-2 border-b border-line px-4 py-3">
+            <div className="relative flex-1">
+              <Search size={14} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-faint" />
+              <input
+                className="field pl-8"
+                placeholder="Search connections"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+              />
+            </div>
+            <button className="icon-btn" title="New connection" onClick={() => setEditing('new')}>
+              <Plus size={16} />
+            </button>
+          </div>
+
+          <div className="min-h-0 flex-1 overflow-y-auto px-2 py-2">
+            {connections.length === 0 && (
+              <div className="mt-24 text-center text-muted">
+                No connections yet.
+                <div className="mt-3">
+                  <button className="btn" onClick={() => setEditing('new')}>
+                    <Plus size={14} /> Create your first connection
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {groups.map(([group, items]) => (
+              <section key={group || '_'} className="mb-2">
+                {group && <div className="px-3 pb-1 pt-3 text-[11px] font-semibold uppercase tracking-wide text-faint">{group}</div>}
+                {items.map((c) => (
+                  <div
+                    key={c.id}
+                    className={`group flex cursor-default items-center gap-3 rounded-lg px-3 py-2 ${
+                      selectedId === c.id ? 'bg-accent-soft' : 'hover:bg-panel'
+                    }`}
+                    onClick={() => setSelectedId(c.id)}
+                    onDoubleClick={() => open(c)}
+                    onKeyDown={(e) => e.key === 'Enter' && open(c)}
+                    tabIndex={0}
+                  >
+                    <div
+                      className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-[11px] font-bold text-white"
+                      style={{ background: c.color }}
+                    >
+                      {ENGINES[c.engine].badge}
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-2">
+                        <span className="truncate font-medium">{c.name}</span>
+                        <span
+                          className="rounded px-1.5 py-px text-[10px] font-semibold uppercase text-white"
+                          style={{ background: TAG_COLORS[c.tag] }}
+                        >
+                          {c.tag}
+                        </span>
+                      </div>
+                      <div className="truncate text-xs text-muted">
+                        {ENGINE_LABELS[c.engine]} · {subtitle(c)}
+                      </div>
+                    </div>
+                    {busyId === c.id ? (
+                      <span className="text-xs text-muted">Connecting…</span>
+                    ) : (
+                      <div className="hidden items-center gap-0.5 group-hover:flex">
+                        <button className="icon-btn" title="Edit" onClick={() => setEditing(c)}>
+                          <Pencil size={13} />
+                        </button>
+                        <button className="icon-btn" title="Duplicate" onClick={() => duplicate(c)}>
+                          <Copy size={13} />
+                        </button>
+                        <button className="icon-btn" title="Delete" onClick={() => remove(c)}>
+                          <Trash2 size={13} />
+                        </button>
+                        <button className="btn ml-1 h-6 px-2 text-xs" onClick={() => open(c)}>
+                          Connect
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </section>
+            ))}
+          </div>
+          </>
+        )}
       </main>
 
       {editing && (
