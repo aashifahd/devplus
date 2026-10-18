@@ -10,7 +10,8 @@
     "typecheck": "tsc --noEmit -p tsconfig.json",
     "notices": "node scripts/notices.mjs",
     "dist": "npm run notices && electron-vite build && electron-builder --publish never",
-    "release": "npm run notices && electron-vite build && electron-builder --publish always"
+    "release": "npm run notices && electron-vite build && electron-builder --publish always",
+    "release:tag": "node scripts/tag-release.mjs"
   },
   "author": {
     "name": "DevPlus contributors"

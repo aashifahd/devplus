@@ -2,10 +2,10 @@
 
 ## Cutting a release
 
-1. Bump `version` in `package.json` (semver; the updater compares versions).
-2. Commit, then tag and push: `git tag v0.8.1 && git push origin v0.8.1`.
+1. Open a pull request titled `chore: release 0.8.1` that bumps `version` in `package.json` (semver; the updater compares versions), and merge it.
+2. On an up-to-date `main` (or `release/x.y` for a patch to an older version), run `npm run release:tag`. It checks the branch and version, then pushes the `v0.8.1` tag. Only the maintainer can push `v*` tags.
 3. The **Release** workflow builds Windows (NSIS), macOS (Apple Silicon dmg + zip) and Linux (AppImage + deb) installers and attaches them, with the update metadata (`latest.yml`, `latest-mac.yml`, `latest-linux.yml` and blockmaps), to a **draft** GitHub release.
-4. Check the draft, write the notes, and publish it. Installed copies pick it up within six hours, or right away with **Check for updates**.
+4. Check the draft. Its notes are generated from the merged pull requests, grouped by label (see `.github/release.yml`); edit them if needed, then publish it. Installed copies pick it up within six hours, or right away with **Check for updates**.
 
 Local builds: `npm run dist` makes an installer for the current OS in `dist/` without publishing anything.
 
