@@ -75,7 +75,7 @@ App data lives in your user data folder (`%APPDATA%\DevPlus` on Windows, `~/Libr
 
 ## Contributing
 
-Bug reports, ideas and pull requests are welcome. Start with [CONTRIBUTING.md](CONTRIBUTING.md); security issues go through [SECURITY.md](SECURITY.md). The plan for what comes next is in [docs/ROADMAP.md](docs/ROADMAP.md).
+Bug reports and ideas are welcome from everyone as issues. Pull requests are open to collaborators; [CONTRIBUTING.md](CONTRIBUTING.md) explains how to become one; security issues go through [SECURITY.md](SECURITY.md). The plan for what comes next is in [docs/ROADMAP.md](docs/ROADMAP.md).
 
 ## License
 

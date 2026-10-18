@@ -2,10 +2,11 @@
 
 Thanks for helping. A few things make reviews quick.
 
-## Before you start
+## How contributions work
 
-- For anything bigger than a small fix, open an issue first so we can agree on the approach.
-- Search existing issues; someone may already be on it.
+- **Anyone** can open issues: bug reports, ideas and questions are all welcome. Search existing issues first; someone may already be on it.
+- **Pull requests are open to collaborators only.** If you'd like to contribute code, open an issue describing what you want to change. Once we agree on the approach, the maintainer can add you as a collaborator so you can open a pull request.
+- Every pull request needs the maintainer's approval and passing CI on Windows, macOS and Linux before it is merged. `main` is protected: no direct pushes, force pushes or deletion.
 
 ## Setup
 
@@ -32,6 +33,7 @@ docker run -d --name dbc-pg -e POSTGRES_PASSWORD=secret -p 55432:5432 postgres:1
 
 ## Pull requests
 
+- Work on a branch and open the pull request against `main`. Merges are squash or rebase only, so history stays linear.
 - One topic per pull request, with a description of what changed and how you tested it (screenshots for UI changes help).
 - Mention which database engines you tried it against.
 
