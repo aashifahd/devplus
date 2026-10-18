@@ -13,6 +13,7 @@
 
 ## Next
 
+- macOS Intel and Windows/Linux ARM builds
 - Code signing for Windows (SignPath for open-source projects) and Apple notarization
 - SQLite table rebuilds for column type, null, default and foreign key changes
 - More connection importers (DBeaver, DataGrip, pgAdmin)

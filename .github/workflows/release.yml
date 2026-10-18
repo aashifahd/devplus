@@ -9,7 +9,18 @@ permissions:
   contents: write
 
 jobs:
+  # One draft up front, so the three build jobs attach to it instead of racing to create their own.
+  draft:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Create draft release
+        run: gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1 || gh release create "$GITHUB_REF_NAME" --draft --title "DevPlus ${GITHUB_REF_NAME#v}" --generate-notes
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
   build:
+    needs: draft
     strategy:
       fail-fast: false
       matrix:
@@ -24,7 +35,14 @@ jobs:
       - run: npm ci
       - run: npm run typecheck
       - name: Build and publish
-        run: npm run release
+        shell: bash
+        # Without a Developer ID, macOS builds are ad-hoc signed: Apple Silicon won't run a fully unsigned app.
+        run: |
+          if [ "$RUNNER_OS" = "macOS" ] && [ -z "$CSC_LINK" ]; then
+            npm run release -- -c.mac.identity=-
+          else
+            npm run release
+          fi
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           # Optional signing. Builds are unsigned when these secrets are absent.

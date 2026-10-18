@@ -18,7 +18,7 @@ See [docs/FEATURES.md](docs/FEATURES.md) for the details and known limits of eac
 
 ## Download
 
-Installers for Windows, macOS and Linux are published on the [Releases](https://github.com/aashifahd/devplus/releases) page. Installed builds update themselves from there (you can turn this off in Settings → About).
+Installers for Windows (x64), macOS (Apple Silicon) and Linux (x64) are published on the [Releases](https://github.com/aashifahd/devplus/releases) page. Installed builds update themselves from there (you can turn this off in Settings → About).
 
 Early builds are not code-signed yet, so Windows SmartScreen and macOS Gatekeeper will warn the first time you open them. See [docs/RELEASING.md](docs/RELEASING.md) for the signing plan.
 
